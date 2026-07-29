@@ -1,0 +1,65 @@
+diff --git a/gen.sh b/gen.sh
+index 7084263..d32dfe1 100755
+--- a/gen.sh
++++ b/gen.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# set -eo pipefail
++set -eo pipefail
+ #### Functions definitions
+ 
+ check_path() {
+@@ -12,13 +12,14 @@ check_path() {
+ }
+ 
+ 
+-SCRIPT_DIR=$(dirname "$(realpath "$0")")
+-if [ -f ${SCRIPT_DIR}/paths.conf ]; then
+-	. "${SCRIPT_DIR}/paths.conf"
+-else
+-   echo "ResHelper: ERROR: ${SCRIPT_DIR}/paths.conf not found. Please run ~/ResHelper/install.sh again. Exiting.. "
+-   exit 1
+-fi
++SCRIPT_DIR=$(dirname "$(realpath "$0")")
++KLIPPER_PATH=$(realpath "${SCRIPT_DIR}/../..")
++I_HOME=${KLIPPER_PATH%/*}
++RH_PATH=${SCRIPT_DIR}
++CONFIG_PATH=${I_HOME}/printer_data/config
++PK_PATH=${I_HOME}/klippy-env/bin
++KLIPPER_VER=DK_BE
++TMP_PATH=${TMPDIR:-/tmp}
+ 
+ # Check if required argument is provided
+ if [ $# -lt 1 ]; then
+@@ -88,20 +89,16 @@ fi
+ if [ "$2" -eq 1 ]; then 
+ 		echo "ResHelper: Calculating damping ratio for the $1 axis"
+ 
+-				PYTHON=$(command -v python3 || command -v python)
+-				if [ -z "$PYTHON" ]; then
+-						echo "ResHelper: Neither python nor python3 is installed."
+-				else
+-						DR_RESULT=$($PYTHON "${RH_PATH}/dr_solver.py" "$TMP_PATH/resonances_${1}_*.csv")
+-
+-						# Validating results
+-						if [ "$(echo "$DR_RESULT > 0.001" | bc -l)" -eq 1 ] && \
+-							[ "$(echo "$DR_RESULT < 2.0" | bc -l)" -eq 1 ]; then
+-								dr=$DR_RESULT
+-								echo "ResHelper: Damping ratio calculated: $DR_RESULT"
+-						else
+-								echo "ResHelper: WARNING: The DR result is out of expected range: $DR_RESULT"
+-						fi
+-				fi
++				DR_RESULT=$("${PK_PATH}/python" "${RH_PATH}/dr_solver.py" "$TMP_PATH/resonances_${1}_*.csv")
++
++				# Validate the result without relying on a host bc package.
++				if "${PK_PATH}/python" -c \
++					'import sys; value = float(sys.argv[1]); raise SystemExit(not 0.001 < value < 2.0)' \
++					"$DR_RESULT"; then
++						dr=$DR_RESULT
++						echo "ResHelper: Damping ratio calculated: $DR_RESULT"
++				else
++						echo "ResHelper: WARNING: The DR result is invalid or out of expected range: $DR_RESULT"
++				fi
+ 		fi
+

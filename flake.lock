@@ -138,12 +138,29 @@
         "type": "github"
       }
     },
+    "reshelper": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1782571269,
+        "narHash": "sha256-Rp7rLgG08fqh6ckUG6aIKQuceFgXDJNh5cAu32EA7M4=",
+        "owner": "lhndo",
+        "repo": "ResHelper",
+        "rev": "65843119c1cb851b2f81a0050441f1fe3c056412",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lhndo",
+        "repo": "ResHelper",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "autopa": "autopa",
         "happy-hare": "happy-hare",
         "klipper": "klipper",
         "nixpkgs": "nixpkgs",
+        "reshelper": "reshelper",
         "shaketune": "shaketune"
       }
     },

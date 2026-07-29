@@ -6,6 +6,7 @@
   extras,
   requirements ? [],
   scripts ? {},
+  files ? {},
 }:
 runCommand name {} ''
   mkdir -p "$out"
@@ -39,6 +40,21 @@ runCommand name {} ''
 
       install -m755 "${source}" "$out/scripts/${target}"
     '') scripts
+  )}
+
+  ${lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (target: source: ''
+      targetPath="$out/${target}"
+      if [ -e "$targetPath" ] || [ -L "$targetPath" ]; then
+        echo "Package file already exists: ${target}" >&2
+        exit 1
+      fi
+
+      targetDir="$(dirname "$targetPath")"
+      mkdir -p "$targetDir"
+      chmod u+w "$targetDir"
+      cp -rL "${source}" "$targetPath"
+    '') files
   )}
 
   chmod u+w "$out/scripts/klippy-requirements.txt"

@@ -21,6 +21,11 @@
       url = "github:Frix-x/klippain-shaketune";
       flake = false;
     };
+
+    reshelper = {
+      url = "github:lhndo/ResHelper";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -55,6 +60,12 @@
           patches = [./patches/happy-hare-kalico-extruder.patch];
         };
 
+        reshelper = pkgs.applyPatches {
+          name = "reshelper";
+          src = inputs.reshelper;
+          patches = [./patches/reshelper-runtime.patch];
+        };
+
         package = pkgs.callPackage ./nix/with-klippy-extras.nix {
           name = "${base.name}-with-extras";
           src = base;
@@ -73,6 +84,12 @@
           scripts = {
             "flash-mcus.sh" = ./scripts/flash-mcus.sh;
             "flashtool.py" = "${klipper.packages.${system}.katapult-source}/scripts/flashtool.py";
+          };
+          files = {
+            "klippy/plugins/shaper_calibrate_classic.py" = "${reshelper}/patches/dk_be/shaper_calibrate_classic.py";
+            "scripts/calibrate_shaper_classic.py" = "${reshelper}/patches/dk_be/calibrate_shaper_classic.py";
+            "scripts/reshelper/dr_solver.py" = "${reshelper}/dr_solver.py";
+            "scripts/reshelper/gen.sh" = "${reshelper}/gen.sh";
           };
           requirements = builtins.filter builtins.pathExists [
             "${happy-hare}/requirements.txt"
