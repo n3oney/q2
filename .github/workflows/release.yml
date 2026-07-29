@@ -27,8 +27,19 @@ jobs:
       - name: Build Q2 release archive
         id: package
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
+          package_path="$(nix eval --raw .#zip.package.outPath)"
+          previous_body="$(gh release view --json body --jq .body 2>/dev/null || true)"
+
+          if [[ "$previous_body" == *"Package output: \`$package_path\`"* ]]; then
+            echo "Package output is unchanged: $package_path"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
           version="$(nix eval --raw .#zip.version)"
 
@@ -37,16 +48,23 @@ jobs:
             --out-link "dist/q2.zip" \
             --print-build-logs
 
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          {
+            echo "version=$version"
+            echo "package_path=$package_path"
+            echo "changed=true"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub release
+        if: steps.package.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           VERSION: ${{ steps.package.outputs.version }}
+          PACKAGE_PATH: ${{ steps.package.outputs.package_path }}
         shell: bash
         run: |
           set -euo pipefail
+          notes="Automated Q2 build for commit $GITHUB_SHA. Package output: \`$PACKAGE_PATH\`."
 
           if existing_target=$(gh release view "$VERSION" --json targetCommitish --jq .targetCommitish 2>/dev/null); then
             if [ "$existing_target" != "$GITHUB_SHA" ]; then
@@ -55,11 +73,12 @@ jobs:
             fi
 
             gh release upload "$VERSION" "dist/q2.zip" --clobber
+            gh release edit "$VERSION" --notes "$notes"
           else
             gh release create "$VERSION" \
               "dist/q2.zip" \
               --target "$GITHUB_SHA" \
               --title "$VERSION" \
               --latest \
-              --notes "Automated Q2 build for commit $GITHUB_SHA."
+              --notes "$notes"
           fi

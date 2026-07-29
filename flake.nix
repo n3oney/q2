@@ -101,6 +101,8 @@
               zip -r -X "$out" .
             )
           '';
+
+          passthru.package = package;
         };
       in {
         kalico-bleeding-edge = package;
