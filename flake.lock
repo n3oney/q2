@@ -90,14 +90,17 @@
         "klipper": "klipper_2",
         "nixpkgs": [
           "nixpkgs"
-        ]
+        ],
+        "rockchip-kernel": "rockchip-kernel",
+        "rockchip-uboot": "rockchip-uboot",
+        "rtl8189fs": "rtl8189fs"
       },
       "locked": {
-        "lastModified": 1786231813,
-        "narHash": "sha256-Nq0IxiTQW7jh0hM2mt8CJRt5A/WvdlwzcBVgsmT9JXc=",
+        "lastModified": 1787304464,
+        "narHash": "sha256-km/nJcb8udMJj9nbt5RNHrxMVThqnwrqfDPxePKaEkQ=",
         "owner": "n3oney",
         "repo": "qidi-q2-klipper",
-        "rev": "6d7821f23f492fcde2299aeb36e92a1032d66b89",
+        "rev": "e205b1b27d24edb9c0c104667dcf35ba4257c695",
         "type": "github"
       },
       "original": {
@@ -109,11 +112,11 @@
     "klipper_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1786114898,
-        "narHash": "sha256-n8pJ3/grYLDZeSfId38DUm49G9hhMV6IJDQH5O/disw=",
+        "lastModified": 1787069575,
+        "narHash": "sha256-qs60qBwlD7A0xneNzeNcKfWc8II5rG2oj+tvuhn/aWw=",
         "owner": "klipper3d",
         "repo": "klipper",
-        "rev": "84104bbbd7625d28b4eaaad83f4562972460ecd9",
+        "rev": "60fc7aa67a8da9abb43a2bad825d4992294ebf3f",
         "type": "github"
       },
       "original": {
@@ -154,6 +157,40 @@
         "type": "github"
       }
     },
+    "rockchip-kernel": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1766744593,
+        "narHash": "sha256-hhaNyBer/2dzWNZWxxExNbSoDptKtX1lSUQJGZjRjI0=",
+        "owner": "rockchip-linux",
+        "repo": "kernel",
+        "rev": "b4ef083dc0c3608e744deabb43dc6b781aadbe6e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rockchip-linux",
+        "ref": "develop-6.1",
+        "repo": "kernel",
+        "type": "github"
+      }
+    },
+    "rockchip-uboot": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1766458892,
+        "narHash": "sha256-OlJD80LFarOPoGLOVHs0cQFX8wJSTcYfugxsF5xIllk=",
+        "owner": "rockchip-linux",
+        "repo": "u-boot",
+        "rev": "aeec6f2bfd5ce0cfcdfe0ffc7f84d9d143683856",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rockchip-linux",
+        "ref": "next-dev",
+        "repo": "u-boot",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "autopa": "autopa",
@@ -162,6 +199,23 @@
         "nixpkgs": "nixpkgs",
         "reshelper": "reshelper",
         "shaketune": "shaketune"
+      }
+    },
+    "rtl8189fs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784035724,
+        "narHash": "sha256-rPVQKbo/S03WSoYk1ZFeF0KAbN9DnUnLLPA1mdyKSfg=",
+        "owner": "jwrdegoede",
+        "repo": "rtl8189ES_linux",
+        "rev": "63900adf1633d31d56af28ac4c535b618e7a5927",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jwrdegoede",
+        "ref": "rtl8189fs",
+        "repo": "rtl8189ES_linux",
+        "type": "github"
       }
     },
     "shaketune": {
