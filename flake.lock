@@ -142,7 +142,24 @@
         "autopa": "autopa",
         "happy-hare": "happy-hare",
         "klipper": "klipper",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "shaketune": "shaketune"
+      }
+    },
+    "shaketune": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1768571137,
+        "narHash": "sha256-ztgLp8PUJafUBt/PdlGj5x7ER5vxw4uIfh3/3Cbl8Ps=",
+        "owner": "Frix-x",
+        "repo": "klippain-shaketune",
+        "rev": "354ee4be6db218715239f7b9411c2c37fdea23dd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Frix-x",
+        "repo": "klippain-shaketune",
+        "type": "github"
       }
     }
   },

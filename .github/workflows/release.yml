@@ -39,6 +39,7 @@ jobs:
 
           mkdir -p package dist
           cp -rL result/. package/
+          chmod -R u+rwX,go+rX package
 
           jq -n \
             --arg project_name "$project_name" \

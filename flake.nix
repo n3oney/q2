@@ -16,6 +16,11 @@
       url = "github:G0BL1N/autopa";
       flake = false;
     };
+
+    shaketune = {
+      url = "github:Frix-x/klippain-shaketune";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -23,6 +28,7 @@
     klipper,
     happy-hare,
     autopa,
+    shaketune,
     ...
   }: let
     lib = nixpkgs.lib;
@@ -46,7 +52,13 @@
             "mmu_sensors.py" = "${happy-hare}/extras/mmu_sensors.py";
             "mmu_servo.py" = "${happy-hare}/extras/mmu_servo.py";
             autopa = "${autopa}/autopa";
+            shaketune = "${shaketune}/shaketune";
           };
+          requirements = builtins.filter builtins.pathExists [
+            "${happy-hare}/requirements.txt"
+            "${autopa}/requirements.txt"
+            "${shaketune}/requirements.txt"
+          ];
         };
       in {
         kalico-bleeding-edge = package;

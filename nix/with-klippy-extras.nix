@@ -4,6 +4,7 @@
   name,
   src,
   extras,
+  requirements ? [],
 }:
 runCommand name {} ''
   mkdir -p "$out"
@@ -24,4 +25,10 @@ runCommand name {} ''
         "$out/klippy/extras/${target}"
     '') extras
   )}
+
+  chmod u+w "$out/scripts/klippy-requirements.txt"
+  ${lib.concatMapStringsSep "\n" (requirementsFile: ''
+    printf '\n' >> "$out/scripts/klippy-requirements.txt"
+    cat "${requirementsFile}" >> "$out/scripts/klippy-requirements.txt"
+  '') requirements}
 ''
