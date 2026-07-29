@@ -13,14 +13,13 @@ index 7084263..d32dfe1 100755
  }
  
  
--SCRIPT_DIR=$(dirname "$(realpath "$0")")
+ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 -if [ -f ${SCRIPT_DIR}/paths.conf ]; then
 -	. "${SCRIPT_DIR}/paths.conf"
 -else
 -   echo "ResHelper: ERROR: ${SCRIPT_DIR}/paths.conf not found. Please run ~/ResHelper/install.sh again. Exiting.. "
 -   exit 1
 -fi
-+SCRIPT_DIR=$(dirname "$(realpath "$0")")
 +KLIPPER_PATH=$(realpath "${SCRIPT_DIR}/../..")
 +I_HOME=${KLIPPER_PATH%/*}
 +RH_PATH=${SCRIPT_DIR}
@@ -62,4 +61,3 @@ index 7084263..d32dfe1 100755
 +						echo "ResHelper: WARNING: The DR result is invalid or out of expected range: $DR_RESULT"
 +				fi
  		fi
-

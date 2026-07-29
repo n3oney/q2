@@ -90,6 +90,8 @@
             "scripts/calibrate_shaper_classic.py" = "${reshelper}/patches/dk_be/calibrate_shaper_classic.py";
             "scripts/reshelper/dr_solver.py" = "${reshelper}/dr_solver.py";
             "scripts/reshelper/gen.sh" = "${reshelper}/gen.sh";
+            "scripts/reshelper/analysis.nix" = ./nix/reshelper-analysis.nix;
+            "scripts/reshelper/gen-nix.sh" = ./scripts/reshelper-gen-nix.sh;
           };
           requirements = builtins.filter builtins.pathExists [
             "${happy-hare}/requirements.txt"
