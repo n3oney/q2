@@ -1,5 +1,5 @@
 diff --git a/extras/mmu_machine.py b/extras/mmu_machine.py
-index 6564a0df30..49c20339da 100644
+index 6564a0df30..8cbb490697 100644
 --- a/extras/mmu_machine.py
 +++ b/extras/mmu_machine.py
 @@ -569,6 +569,26 @@
@@ -92,3 +92,12 @@ index 6564a0df30..49c20339da 100644
          msg +=  "\nPRINTER TOOLHEAD: %s Last move time: %s\n" % (self.printer_toolhead.get_position(), self.printer_toolhead.get_last_move_time())
          header = "Extruder Stepper: %s %s %s" % (extruder_name, "(MmuExtruderStepper)" if isinstance(e_stepper, MmuExtruderStepper) else "(Non Homing Default)", '-' * 100)
          msg += header[:100] + "\n"
+@@ -1325,6 +1354,8 @@
+ 
+     # Override to add QUIET option to control console logging
+     def cmd_SET_PRESSURE_ADVANCE(self, gcmd):
++        if hasattr(self, 'pa_model'):
++            return super(MmuExtruderStepper, self).cmd_SET_PRESSURE_ADVANCE(gcmd)
+         pressure_advance = gcmd.get_float('ADVANCE', self.pressure_advance, minval=0.)
+         smooth_time = gcmd.get_float('SMOOTH_TIME', self.pressure_advance_smooth_time, minval=0., maxval=.200)
+         self._set_pressure_advance(pressure_advance, smooth_time)
