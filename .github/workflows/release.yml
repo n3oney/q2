@@ -1,0 +1,87 @@
+name: Build and release Q2
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v22
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: neoney
+
+      - name: Build Q2
+        run: nix build --out-link result --print-build-logs
+
+      - name: Package Moonraker update
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          project_owner="${GITHUB_REPOSITORY%%/*}"
+          project_name="${GITHUB_REPOSITORY#*/}"
+          version="v0.0.$(date -u +%Y%m%d%H%M)"
+          asset_name="${project_name}.zip"
+
+          mkdir -p package dist
+          cp -rL result/. package/
+
+          jq -n \
+            --arg project_name "$project_name" \
+            --arg project_owner "$project_owner" \
+            --arg version "$version" \
+            --arg asset_name "$asset_name" \
+            '{
+              project_name: $project_name,
+              project_owner: $project_owner,
+              version: $version,
+              asset_name: $asset_name
+            }' > package/release_info.json
+
+          (
+            cd package
+            nix shell nixpkgs#zip -c zip -r -X "../dist/$asset_name" .
+          )
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "asset_name=$asset_name" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ steps.package.outputs.version }}
+          ASSET_NAME: ${{ steps.package.outputs.asset_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if existing_target=$(gh release view "$VERSION" --json targetCommitish --jq .targetCommitish 2>/dev/null); then
+            if [ "$existing_target" != "$GITHUB_SHA" ]; then
+              echo "Release $VERSION already belongs to $existing_target" >&2
+              exit 1
+            fi
+
+            gh release upload "$VERSION" "dist/$ASSET_NAME" --clobber
+          else
+            gh release create "$VERSION" \
+              "dist/$ASSET_NAME" \
+              --target "$GITHUB_SHA" \
+              --title "$VERSION" \
+              --latest \
+              --notes "Automated Q2 build for commit $GITHUB_SHA."
+          fi
