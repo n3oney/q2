@@ -54,6 +54,10 @@
             autopa = "${autopa}/autopa";
             shaketune = "${shaketune}/shaketune";
           };
+          scripts = {
+            "flash-mcus.sh" = ./scripts/flash-mcus.sh;
+            "flashtool.py" = "${klipper.packages.${system}.katapult-source}/scripts/flashtool.py";
+          };
           requirements = builtins.filter builtins.pathExists [
             "${happy-hare}/requirements.txt"
             "${autopa}/requirements.txt"
