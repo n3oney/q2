@@ -93,11 +93,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786182164,
-        "narHash": "sha256-Hm9QUW2vV6w2fM2I2OBL7YZRPWim2gEo8HWWE20z4GM=",
+        "lastModified": 1786222331,
+        "narHash": "sha256-+uq5hzwGPCSX3y4tayqUxwfIos3qT0IB08wY+YAgEis=",
         "owner": "n3oney",
         "repo": "qidi-q2-klipper",
-        "rev": "c3332f73090046afb709c9a8eaf75abfcd8cb0be",
+        "rev": "d66d61973c12ef78e45401040b3f63bd1406b893",
         "type": "github"
       },
       "original": {
