@@ -129,5 +129,19 @@
         default = package;
       }
     );
+
+    devShells = forAllSystems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        default = pkgs.mkShell {
+          packages = [pkgs.alejandra];
+        };
+      }
+    );
+
+    formatter = forAllSystems (
+      system: nixpkgs.legacyPackages.${system}.alejandra
+    );
   };
 }

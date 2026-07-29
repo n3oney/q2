@@ -25,7 +25,8 @@ runCommand name {} ''
       cp -rL \
         "${source}" \
         "$out/klippy/extras/${target}"
-    '') extras
+    '')
+    extras
   )}
 
   chmod u+w "$out/scripts"
@@ -39,7 +40,8 @@ runCommand name {} ''
       fi
 
       install -m755 "${source}" "$out/scripts/${target}"
-    '') scripts
+    '')
+    scripts
   )}
 
   ${lib.concatStringsSep "\n" (
@@ -54,12 +56,14 @@ runCommand name {} ''
       mkdir -p "$targetDir"
       chmod u+w "$targetDir"
       cp -rL "${source}" "$targetPath"
-    '') files
+    '')
+    files
   )}
 
   chmod u+w "$out/scripts/klippy-requirements.txt"
   ${lib.concatMapStringsSep "\n" (requirementsFile: ''
-    printf '\n' >> "$out/scripts/klippy-requirements.txt"
-    cat "${requirementsFile}" >> "$out/scripts/klippy-requirements.txt"
-  '') requirements}
+      printf '\n' >> "$out/scripts/klippy-requirements.txt"
+      cat "${requirementsFile}" >> "$out/scripts/klippy-requirements.txt"
+    '')
+    requirements}
 ''
