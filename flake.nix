@@ -26,11 +26,10 @@
   outputs = {
     nixpkgs,
     klipper,
-    happy-hare,
     autopa,
     shaketune,
     ...
-  }: let
+  } @ inputs: let
     lib = nixpkgs.lib;
     forAllSystems = lib.genAttrs lib.systems.flakeExposed;
   in {
@@ -38,6 +37,12 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
         base = klipper.packages.${system}.kalico-bleeding-edge;
+
+        happy-hare = pkgs.applyPatches {
+          name = "happy-hare";
+          src = inputs.happy-hare;
+          patches = [./patches/happy-hare-kalico-extruder.patch];
+        };
 
         package = pkgs.callPackage ./nix/with-klippy-extras.nix {
           name = "${base.name}-with-extras";
