@@ -8,7 +8,7 @@
     };
 
     happy-hare = {
-      url = "github:moggieuk/Happy-Hare";
+      url = "github:Wazzup77/Happy-Hare/bunnybox";
       flake = false;
     };
 

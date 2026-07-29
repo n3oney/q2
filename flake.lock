@@ -19,15 +19,16 @@
     "happy-hare": {
       "flake": false,
       "locked": {
-        "lastModified": 1783663065,
-        "narHash": "sha256-tqhkHlaME1Abr54sgLwj/f6L/VkP4yOW+Uj076TGw/Q=",
-        "owner": "moggieuk",
+        "lastModified": 1784486032,
+        "narHash": "sha256-WSS1NqAIscwhcCA+rUtuCsuUSb0YGQTuXwtVwp0w08g=",
+        "owner": "Wazzup77",
         "repo": "Happy-Hare",
-        "rev": "73d39aab2110deebb64dfb7899c6838a706edcea",
+        "rev": "fb0d8621a622bb60dd8241e559d2569026b98669",
         "type": "github"
       },
       "original": {
-        "owner": "moggieuk",
+        "owner": "Wazzup77",
+        "ref": "bunnybox",
         "repo": "Happy-Hare",
         "type": "github"
       }
