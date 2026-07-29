@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -23,50 +24,26 @@ jobs:
         with:
           name: neoney
 
-      - name: Build Q2
-        run: nix build --out-link result --print-build-logs
-
-      - name: Package Moonraker update
+      - name: Build Q2 release archive
         id: package
         shell: bash
         run: |
           set -euo pipefail
 
-          project_owner="${GITHUB_REPOSITORY%%/*}"
-          project_name="${GITHUB_REPOSITORY#*/}"
-          version="v0.0.$(date -u +%Y%m%d%H%M)"
-          asset_name="${project_name}.zip"
+          version="$(nix eval --raw .#zip.version)"
 
-          mkdir -p package dist
-          cp -rL result/. package/
-          chmod -R u+rwX,go+rX package
-
-          jq -n \
-            --arg project_name "$project_name" \
-            --arg project_owner "$project_owner" \
-            --arg version "$version" \
-            --arg asset_name "$asset_name" \
-            '{
-              project_name: $project_name,
-              project_owner: $project_owner,
-              version: $version,
-              asset_name: $asset_name
-            }' > package/release_info.json
-
-          (
-            cd package
-            nix shell nixpkgs#zip -c zip -r -X "../dist/$asset_name" .
-          )
+          mkdir -p dist
+          nix build .#zip \
+            --out-link "dist/q2.zip" \
+            --print-build-logs
 
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "asset_name=$asset_name" >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           VERSION: ${{ steps.package.outputs.version }}
-          ASSET_NAME: ${{ steps.package.outputs.asset_name }}
         shell: bash
         run: |
           set -euo pipefail
@@ -77,10 +54,10 @@ jobs:
               exit 1
             fi
 
-            gh release upload "$VERSION" "dist/$ASSET_NAME" --clobber
+            gh release upload "$VERSION" "dist/q2.zip" --clobber
           else
             gh release create "$VERSION" \
-              "dist/$ASSET_NAME" \
+              "dist/q2.zip" \
               --target "$GITHUB_SHA" \
               --title "$VERSION" \
               --latest \

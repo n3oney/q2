@@ -24,6 +24,7 @@
   };
 
   outputs = {
+    self,
     nixpkgs,
     klipper,
     autopa,
@@ -32,6 +33,16 @@
   } @ inputs: let
     lib = nixpkgs.lib;
     forAllSystems = lib.genAttrs lib.systems.flakeExposed;
+    projectOwner = "n3oney";
+    projectName = "q2";
+    releaseVersion = "v0.0.${builtins.substring 0 12 self.lastModifiedDate}";
+    assetName = "${projectName}.zip";
+    releaseInfo = builtins.toJSON {
+      project_name = projectName;
+      project_owner = projectOwner;
+      version = releaseVersion;
+      asset_name = assetName;
+    };
   in {
     packages = forAllSystems (
       system: let
@@ -69,8 +80,31 @@
             "${shaketune}/requirements.txt"
           ];
         };
+
+        releaseZip = pkgs.stdenv.mkDerivation {
+          pname = assetName;
+          version = releaseVersion;
+
+          dontUnpack = true;
+
+          nativeBuildInputs = [pkgs.zip];
+          installPhase = ''
+            mkdir package
+            cp -rL "${package}/." package/
+            chmod -R u+rwX,go+rX package
+            printf '%s\n' ${lib.escapeShellArg releaseInfo} > package/release_info.json
+
+            find package -exec touch -h -d '@${toString self.lastModified}' {} +
+            export TZ=UTC
+            (
+              cd package
+              zip -r -X "$out" .
+            )
+          '';
+        };
       in {
         kalico-bleeding-edge = package;
+        zip = releaseZip;
         default = package;
       }
     );
