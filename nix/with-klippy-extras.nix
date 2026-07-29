@@ -5,6 +5,7 @@
   src,
   extras,
   requirements ? [],
+  scripts ? {},
 }:
 runCommand name {} ''
   mkdir -p "$out"
@@ -24,6 +25,20 @@ runCommand name {} ''
         "${source}" \
         "$out/klippy/extras/${target}"
     '') extras
+  )}
+
+  chmod u+w "$out/scripts"
+
+  ${lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (target: source: ''
+      if [ -e "$out/scripts/${target}" ] \
+        || [ -L "$out/scripts/${target}" ]; then
+        echo "Klipper script already exists: ${target}" >&2
+        exit 1
+      fi
+
+      install -m755 "${source}" "$out/scripts/${target}"
+    '') scripts
   )}
 
   chmod u+w "$out/scripts/klippy-requirements.txt"
