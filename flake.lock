@@ -198,7 +198,8 @@
         "klipper": "klipper",
         "nixpkgs": "nixpkgs",
         "reshelper": "reshelper",
-        "shaketune": "shaketune"
+        "shaketune": "shaketune",
+        "tmc-autotune": "tmc-autotune"
       }
     },
     "rtl8189fs": {
@@ -231,6 +232,22 @@
       "original": {
         "owner": "Frix-x",
         "repo": "klippain-shaketune",
+        "type": "github"
+      }
+    },
+    "tmc-autotune": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786515329,
+        "narHash": "sha256-DwkYWcMs5q1u0O4IYe6r95Ksdtt5/pnYfIs1FUdPLus=",
+        "owner": "andrewmcgr",
+        "repo": "klipper_tmc_autotune",
+        "rev": "b6c7cfa98c2ef880812d5279a9117cbe67d6d4d5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "andrewmcgr",
+        "repo": "klipper_tmc_autotune",
         "type": "github"
       }
     }

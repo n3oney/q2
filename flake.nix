@@ -26,6 +26,11 @@
       url = "github:lhndo/ResHelper";
       flake = false;
     };
+
+    tmc-autotune = {
+      url = "github:andrewmcgr/klipper_tmc_autotune";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -86,6 +91,9 @@
             "flashtool.py" = "${klipper.packages.${system}.katapult-source}/scripts/flashtool.py";
           };
           files = {
+            "klippy/plugins/autotune_tmc.py" = "${inputs.tmc-autotune}/autotune_tmc.py";
+            "klippy/plugins/motor_constants.py" = "${inputs.tmc-autotune}/motor_constants.py";
+            "klippy/plugins/motor_database.cfg" = "${inputs.tmc-autotune}/motor_database.cfg";
             "klippy/plugins/shaper_calibrate_classic.py" = "${reshelper}/patches/dk_be/shaper_calibrate_classic.py";
             "scripts/calibrate_shaper_classic.py" = "${reshelper}/patches/dk_be/calibrate_shaper_classic.py";
             "scripts/reshelper/dr_solver.py" = "${reshelper}/dr_solver.py";
